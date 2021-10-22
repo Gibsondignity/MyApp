@@ -26,7 +26,7 @@ class Product(models.Model):
     description = models.TextField()
     quantity = models.IntegerField()
     unit_price = models.FloatField()
-    invoice_amount = models.FloatField()
+    #invoice_amount = models.FloatField()
 
     
     def __str__(self):

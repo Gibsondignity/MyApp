@@ -45,29 +45,15 @@ def logoutUser(request):
 
 @login_required(login_url='login')
 def index(request):
-    product_queryset = Product.objects.all()
-    if request.method == "POST":
-        category = request.POST.get('dropdown')
-        search_data = request.POST.get('search_data')
+	if 'data' in request.GET:
+		data = request.GET['data']
+		supplier_queryset  = Supplier.objects.filter(name__icontains=data)
+	else:
+		supplier_queryset = Supplier.objects.all()
 
-        if category == "Supplier":
-            if search_data != "":
-                supplier_queryset = Supplier.objects.filter(name__contains=search_data)
-                return render(request, 'app/index.html', {"supplier_queryset":supplier_queryset, "product_queryset":product_queryset})
-            else:
-                return HttpResponse('<p>Enter either supplier name or product name to search</p>')
-    
-        elif category == "Products":
-            return HttpResponse('<p> We have not implemented other saerch yet. Search for only supplier and track the other relationships </p>')
+	product_queryset = Product.objects.all()
 
-        else:
-            return HttpResponse('<p> We have not implemented other saerch yet. Search for only supplier and track the other relationships </p>')
-
-
-    else:
-        supplier_queryset = Supplier.objects.all()
-        product_queryset = Product.objects.all()
-        return render(request, 'app/index.html', {"supplier_queryset":supplier_queryset, "product_queryset":product_queryset})
+	return render(request, 'app/index.html', {"supplier_queryset":supplier_queryset, "product_queryset":product_queryset})
 
 
 
@@ -94,22 +80,23 @@ def new_supplier(request):
 
 @login_required(login_url='login')
 def new_product(request):
-    
-    suppliers = Supplier.objects.all()
-    if request.method == "POST":
-        form = AddProductForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "New Supplier Added Successfully")
-            return redirect('records')
-        else:
-            messages.error(request, "Failed to Add New Produce")
 
-    else:
-        return render(request, 'app/add_product.html', {"suppliers":suppliers})
+	form = AddProductForm()
 
-    
-    return render(request, 'app/add_product.html', {"form": form, "suppliers":suppliers})
+	if request.method == "POST":
+		form = AddProductForm(request.POST)
+		if form.is_valid():
+			product = form.save(commit=False)
+			print(product)
+			product.save()
+			messages.success(request, "New Supplier Added Successfully")
+			return redirect('records')
+		else:
+			messages.error(request, "Failed to Add New Product")
+
+	suppliers = Supplier.objects.all()
+	
+	return render(request, 'app/add_product.html', {"form": form, "suppliers":suppliers})
  
 
 

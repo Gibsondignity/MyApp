@@ -24,7 +24,7 @@ class AddProductForm(forms.ModelForm):
     )
     class Meta:
         model = Product
-        fields = ['supplier', 'description', 'quantity', 'unit_price', 'invoice_amount']
+        fields = ['supplier', 'description', 'quantity', 'unit_price']
     
     
 
