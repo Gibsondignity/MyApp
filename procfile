@@ -1,1 +1,1 @@
-web: gunicorn primedominion.primedominion.wsgi 
+web: gunicorn --pythonpath primedominion primedominion.wsgi 
