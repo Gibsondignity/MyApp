@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath primedominion primedominion.wsgi 
+web: gunicorn primedominion.wsgi --log-file -
